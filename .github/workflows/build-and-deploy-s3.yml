@@ -19,6 +19,7 @@ env:
     web/index.php
     web/update.php
     web/web.config
+  THEME_PATH: web/themes/custom/test_theme
 
 jobs:
   build-drupal:
@@ -40,8 +41,6 @@ jobs:
 
   build-theme:
     runs-on: ubuntu-latest
-    env:
-      THEME_PATH: web/themes/custom/test_theme
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
@@ -81,6 +80,7 @@ jobs:
       - name: Download theme artifact
         uses: actions/download-artifact@v2
         with:
+          working-directory: ${{ env.THEME_PATH }}
           name: theme-artifact
 
       - name: Configure AWS Credentials

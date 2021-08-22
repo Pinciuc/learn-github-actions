@@ -35,10 +35,12 @@ jobs:
           key: node-deps-${{ hashFiles('composer.json') }}
           path: web/themes/custom/test_theme/node_modules
 
-      - name: Install node dependencies
+      - name: Install node
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+
+      - name: Install node dependencies
         working-directory: web/themes/custom/test_theme
         run: npm install
 

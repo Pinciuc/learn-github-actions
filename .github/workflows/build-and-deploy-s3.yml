@@ -44,6 +44,10 @@ jobs:
         working-directory: web/themes/custom/test_theme
         run: npm install
 
+      - name: Build theme
+        working-directory: web/themes/custom/test_theme
+        run: npm run sass-compile
+
   deploy:
     runs-on: ubuntu-latest
     needs: [build]

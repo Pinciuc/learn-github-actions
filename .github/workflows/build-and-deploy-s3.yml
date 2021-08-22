@@ -5,6 +5,8 @@ on:
     branches: [ master ]
 
 env:
+  PHP_VERSION: '7.4'
+  THEME_PATH: web/themes/custom/test_theme
   COMPOSER_FILES: |
     drush/
     vendor/
@@ -19,12 +21,16 @@ env:
     web/index.php
     web/update.php
     web/web.config
-  THEME_PATH: web/themes/custom/test_theme
 
 jobs:
   build-drupal:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up PHP ${{ env.PHP_VERSION }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
 
@@ -32,7 +38,7 @@ jobs:
         id: cache-composer
         uses: actions/cache@v2
         with:
-          key: composer-deps-${{ hashFiles('composer.json') }}
+          key: composer-deps-${{ hashFiles('composer.lock') }}
           restore-keys: composer-deps-
           path: ${{ env.COMPOSER_FILES }}
 
@@ -49,7 +55,7 @@ jobs:
       - name: Cache node dependencies
         uses: actions/cache@v2
         with:
-          key: node-deps-${{ hashFiles('composer.json') }}
+          key: node-deps-${{ hashFiles('package-lock.json') }}
           path: ${{ env.THEME_PATH }}/node_modules
 
       - name: Install node
@@ -74,7 +80,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-drupal, build-theme]
+    needs: [ build-drupal, build-theme ]
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
@@ -88,6 +94,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: theme-artifact
+
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

@@ -4,6 +4,22 @@ on:
   push:
     branches: [ master ]
 
+env:
+  COMPOSER_FILES: |
+    drush/
+    vendor/
+    web/core/
+    web/modules/contrib/
+    web/profiles/contrib/
+    web/themes/contrib/
+    web/libraries/
+    web/.ht.router.php
+    web/.htaccess
+    web/autoload.php
+    web/index.php
+    web/update.php
+    web/web.config
+
 jobs:
   build-drupal:
     runs-on: ubuntu-latest
@@ -15,23 +31,16 @@ jobs:
         uses: actions/cache@v2
         with:
           key: composer-deps-${{ hashFiles('composer.json') }}
-          path: |
-            drush/
-            vendor/
-            web/core/
-            web/modules/contrib/
-            web/profiles/contrib/
-            web/themes/contrib/
-            web/libraries/
-            web/.ht.router.php
-            web/.htaccess
-            web/autoload.php
-            web/index.php
-            web/update.php
-            web/web.config
+          path: ${{ env.COMPOSER_FILES }}
 
       - name: Install composer dependencies
         run: composer install --no-interaction --no-dev
+
+      - name: Upload composer artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: composer-artifact
+          path: ${{ env.COMPOSER_FILES }}
 
   build-theme:
     runs-on: ubuntu-latest
@@ -60,10 +69,10 @@ jobs:
         working-directory: ${{ env.THEME_PATH }}
         run: npm run sass-compile
 
-      - name: Upload theme artifacts
+      - name: Upload theme artifact
         uses: actions/upload-artifact@v2
         with:
-          name: theme-css
+          name: theme-artifact
           path: ${{ env.THEME_PATH }}/css/
 
   deploy:
@@ -72,6 +81,16 @@ jobs:
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
+
+      - name: Download composer artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: composer-artifact
+
+      - name: Download theme artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: theme-artifact
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

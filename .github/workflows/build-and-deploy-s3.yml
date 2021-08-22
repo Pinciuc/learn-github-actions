@@ -1,7 +1,7 @@
 name: build-and-deploy-s3
 on: [push]
 jobs:
-  build:
+  build-drupal:
     runs-on: ubuntu-latest
     # container: docker://rpinciuc/ci-builder:0.6
     steps:
@@ -29,6 +29,12 @@ jobs:
       - name: Install composer dependencies
         run: composer install --no-interaction --no-dev
 
+  build-theme:
+    runs-on: ubuntu-latest
+    # container: docker://rpinciuc/ci-builder:0.6
+    steps:
+      - uses: actions/checkout@v2
+
       - name: Cache node dependencies
         uses: actions/cache@v2
         with:
@@ -48,7 +54,7 @@ jobs:
         working-directory: web/themes/custom/test_theme
         run: npm run sass-compile
 
-      - name: Save build artifacts
+      - name: Upload theme artifacts
         uses: actions/upload-artifact@v2
         with:
           name: theme-css
@@ -56,7 +62,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build-drupal, build-theme]
     # container: docker://rpinciuc/ci-builder:0.6
     steps:
       - run: echo "Deploy now"

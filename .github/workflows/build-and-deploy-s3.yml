@@ -51,9 +51,8 @@ jobs:
       - name: Save build artifacts
         uses: actions/upload-artifact@v2
         with:
-          working-directory: web/themes/custom/test_theme
           name: theme-css
-          path: css
+          path: web/themes/custom/test_theme/css
 
   deploy:
     runs-on: ubuntu-latest

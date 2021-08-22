@@ -5,5 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: rpinciuc/ci-builder@0.6
+      - uses: docker://rpinciuc/ci-builder:0.6
       - run: composer install --no-interaction --no-dev

@@ -3,7 +3,34 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    # container: docker://rpinciuc/ci-builder:0.6
     steps:
       - uses: actions/checkout@v2
-      - uses: docker://rpinciuc/ci-builder:0.6
-      - run: composer install --no-interaction --no-dev
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          key: composer-deps-${{ hashFiles('**/composer.json') }}
+          path: |
+            drush/
+            vendor/
+            web/core/
+            web/modules/contrib/
+            web/profiles/contrib/
+            web/themes/contrib/
+            web/libraries/
+            web/.ht.router.php
+            web/.htaccess
+            web/autoload.php
+            web/index.php
+            web/update.php
+            web/web.config
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --no-dev
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    # container: docker://rpinciuc/ci-builder:0.6
+    steps:
+      - run: echo "Deploy now"

@@ -66,6 +66,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [ build-drupal, build-theme ]
+    environment:
+      name: Production
+      url: https://example.com
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2

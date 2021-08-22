@@ -61,7 +61,7 @@ jobs:
         with:
           name: theme-artifact
           # Use * to delimit the directory structure that will be included.
-          path: '**/${{ env.THEME_PATH }}/css'
+          path: "**/${{ env.THEME_PATH }}/css"
 
   deploy:
     runs-on: ubuntu-latest

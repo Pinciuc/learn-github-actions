@@ -10,7 +10,7 @@ jobs:
       - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
-          key: composer-deps-${{ hashFiles('**/composer.json') }}
+          key: composer-deps-${{ hashFiles('composer.json') }}
           path: |
             drush/
             vendor/

@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: theme-artifact
-          path: "*/${{ env.THEME_PATH }}/css"
+          path: "**/${{ env.THEME_PATH }}/css"
 
   deploy:
     runs-on: ubuntu-latest

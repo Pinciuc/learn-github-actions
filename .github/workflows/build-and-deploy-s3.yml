@@ -38,12 +38,13 @@ jobs:
   build-theme:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Node ${{ env.NODE_VERSION }} ${{ env.THEME_PATH }}
+      - name: Set up Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: ${{ env.THEME_PATH }}/package-lock.json
+          cache-dependency-path: |
+            ${{ env.THEME_PATH }}/package-lock.json
 
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2

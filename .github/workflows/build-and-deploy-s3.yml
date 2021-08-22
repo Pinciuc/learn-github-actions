@@ -1,4 +1,4 @@
-name: build-drupal-and-deploy-to-s3
+name: build-and-deploy-s3
 jobs:
   build:
     runs-on: ubuntu-latest

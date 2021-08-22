@@ -28,19 +28,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Cache composer dependencies
+        id: cache-composer
         uses: actions/cache@v2
         with:
           key: composer-deps-${{ hashFiles('composer.json') }}
           path: ${{ env.COMPOSER_FILES }}
 
       - name: Install composer dependencies
+        if: steps.cache-composer.outputs.cache-hit != 'true'
         run: composer install --no-interaction --no-dev
-
-      - name: Upload composer artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: composer-artifact
-          path: ${{ env.COMPOSER_FILES }}
 
   build-theme:
     runs-on: ubuntu-latest
@@ -81,11 +77,6 @@ jobs:
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
-
-      - name: Download composer artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: composer-artifact
 
       - name: Download theme artifact
         uses: actions/download-artifact@v2

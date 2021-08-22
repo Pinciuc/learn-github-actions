@@ -33,6 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           key: composer-deps-${{ hashFiles('composer.json') }}
+          restore-keys: composer-deps-
           path: ${{ env.COMPOSER_FILES }}
 
       - name: Install composer dependencies
@@ -68,6 +69,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: theme-artifact
+          # Use * to delimit the directory structure that will be included.
           path: "**/${{ env.THEME_PATH }}/css"
 
   deploy:
@@ -76,6 +78,11 @@ jobs:
     steps:
       - name: Use actions/checkout@v2
         uses: actions/checkout@v2
+
+      - name: Extract cached composer dependencies
+        uses: actions/cache@v2
+        with:
+          key: composer-deps-
 
       - name: Download theme artifact
         uses: actions/download-artifact@v2

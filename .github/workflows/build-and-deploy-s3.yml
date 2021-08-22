@@ -48,6 +48,13 @@ jobs:
         working-directory: web/themes/custom/test_theme
         run: npm run sass-compile
 
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          working-directory: web/themes/custom/test_theme
+          name: theme-css
+          path: css
+
   deploy:
     runs-on: ubuntu-latest
     needs: [build]

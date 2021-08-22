@@ -103,7 +103,7 @@ jobs:
           aws-region: ca-central-1
 
       - name: Create zip archive
-        run: zip -y -q -x ".git/*" -r deploy.zip .
+        run: zip -y -q -x ".git/*" -r ${{ secrets.AWS_S3_DEPLOY_FILENAME }} .
 
       - name: Copy archive to S3 with the AWS CLI
-        run: aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_DEPLOY_PATH }}/${{ secrets.AWS_S3_DEPLOY_FILENAME }}
+        run: aws s3 cp ${{ secrets.AWS_S3_DEPLOY_FILENAME }} s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_DEPLOY_PATH }}/
